@@ -2,6 +2,9 @@
 import { Filter, Plus } from '@lucide/vue'
 import RegisterDataModal from '~/components/modal/RegisterDataModal.vue'
 
+const { data: profile } = await useFetch('/api/profile')
+const { data: latest } = await useFetch('/api/readings/latest')
+
 const menuOpen = ref(false)
 const menuItems = ['Configuración', 'Perfil', 'Cambiar usuario']
 
@@ -11,12 +14,14 @@ const user: { name: string; sex: 'M' | 'F'; birthDate: string } = {
   birthDate: '1994-03-17'
 }
 
-const metrics: { badge: string; name: string; value: number; unit: string; status: string; variant: 'ok' | 'warn' | 'alert' }[] = [
-  { badge: 'SYS', name: 'Sistólica', value: 138, unit: 'mmHg', status: 'Elevada', variant: 'warn' },
-  { badge: 'DIA', name: 'Diastólica', value: 96, unit: 'mmHg', status: 'Normal', variant: 'ok' },
-  { badge: 'PPM', name: 'Pulso por minuto', value: 63, unit: 'ppm', status: 'Normal', variant: 'ok' },
-  { badge: 'TEST', name: 'Test card', value: 99, unit: 'tst', status: 'Test', variant: 'alert' },
-]
+const metrics = computed(() => (latest.value ?? []).map(m => ({
+  badge: m.key.toUpperCase(),
+  name: m.label,
+  value: m.value,
+  unit: m.unit,
+  status: 'Normal',      // classification logic still TODO
+  variant: 'ok' as const,
+})))
 </script>
 
 <template>
@@ -35,7 +40,7 @@ const metrics: { badge: string; name: string; value: number; unit: string; statu
       </div>
     </header>
     <div class="toolbar">
-      <UserInfo :name="user.name" :sex="user.sex" :birth-date="user.birthDate" />
+      <UserInfo v-if="profile ":name="profile.name" :sex="profile.sex" :birth-date="profile.birthDate" />
       <div class="actions">
         <ToolbarButton :modal="RegisterDataModal" :modal-props="{ metrics }">
           <Plus :size="14" />

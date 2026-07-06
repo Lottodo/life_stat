@@ -7,15 +7,26 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx server/db/seed.ts"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/sora": "^5.2.8",
     "@lucide/vue": "^1.23.0",
+    "better-sqlite3": "^12.11.1",
+    "drizzle-orm": "^0.45.2",
     "nuxt": "^4.4.8",
     "vue": "^3.5.38",
     "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^26.1.0",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.23.0"
   }
 }

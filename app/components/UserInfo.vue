@@ -1,14 +1,16 @@
 <script setup lang="ts">
 const props = defineProps<{
   name: string
-  sex: 'M' | 'F'
-  birthDate: string
+  sex: string | null
+  birthDate: string | null
 }>()
 
-const sexLabels: Record<'M' | 'F', string> = { M: 'Masc.', F: 'Fem.' }
-const sexLabel = computed(() => sexLabels[props.sex])
+const sexLabels: Record<string, string> = { M: 'Masc.', F: 'Fem.' }
+const sexLabel = computed(() => props.sex ? (sexLabels[props.sex] ?? props.sex) : 'N/A')
 
-function calculateAge(birthDate: string) {
+
+function calculateAge(birthDate: string | null) {
+  if (!birthDate) return null
   const birth = new Date(birthDate)
   const today = new Date()
   let age = today.getFullYear() - birth.getFullYear()
