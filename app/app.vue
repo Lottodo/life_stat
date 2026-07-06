@@ -4,7 +4,7 @@ const menuItems = ['Configuración', 'Perfil', 'Cambiar usuario']
 
 const user: { name: string; sex: 'M' | 'F'; birthDate: string } = {
   name: 'Jane Doe',
-  sex: 'M',
+  sex: 'F',
   birthDate: '1994-03-17'
 }
 
