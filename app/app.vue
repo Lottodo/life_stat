@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { Filter, Plus } from '@lucide/vue'
+import RegisterDataModal from '~/components/modal/RegisterDataModal.vue'
+
 const menuOpen = ref(false)
 const menuItems = ['Configuración', 'Perfil', 'Cambiar usuario']
 
@@ -31,7 +34,19 @@ const metrics: { badge: string; name: string; value: number; unit: string; statu
         </ul>
       </div>
     </header>
-    <UserInfo :name="user.name" :sex="user.sex" :birth-date="user.birthDate" />
+    <div class="toolbar">
+      <UserInfo :name="user.name" :sex="user.sex" :birth-date="user.birthDate" />
+      <div class="actions">
+        <ToolbarButton :modal="RegisterDataModal" :modal-props="{ metrics }">
+          <Plus :size="14" />
+          <span class="label">Registrar datos</span>
+        </ToolbarButton>
+        <ToolbarButton>
+          <Filter :size="14" />
+          <span class="label">Filtrar</span>
+        </ToolbarButton>
+      </div>
+    </div>
     <div class="cards">
       <MetricCard
         v-for="metric in metrics"
@@ -167,6 +182,19 @@ body {
 
 .menu li:hover {
   background: var(--paper);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
 }
 
 .cards {
