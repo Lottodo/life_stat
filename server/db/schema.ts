@@ -1,4 +1,5 @@
 import { sqliteTable, integer, text, real } from 'drizzle-orm/sqlite-core'
+import { sql } from 'drizzle-orm'
 
 export const profiles = sqliteTable('profiles', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -22,16 +23,12 @@ export const metrics = sqliteTable('metrics', {
 
 export const readings = sqliteTable('readings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  profileId: integer('profile_id').notNull().references(() => profiles.id),
-  recordedAt: text('recorded_at').notNull(), // ISO string
-  source: text('source'),                    // 'baumanometro', 'manual', 'oximetro'
-  notes: text('notes'),
-  sessionId: text('session_id'),             // agrupa sys+dia+ppm de una sola toma
-})
-
-export const readingValues = sqliteTable('reading_values', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  readingId: integer('reading_id').notNull().references(() => readings.id),
   metricId: integer('metric_id').notNull().references(() => metrics.id),
+  profileId: integer('profile_id').notNull().references(() => profiles.id),
   value: real('value').notNull(),
+  note: text('note'),
+  readingDate: text('reading_date').notNull(), // 'YYYY-MM-DD'
+  readingTime: text('reading_time').notNull(), // 'HH:MM'
+  createdAt: text('created_at').notNull().default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: text('updated_at').notNull().default(sql`(CURRENT_TIMESTAMP)`),
 })

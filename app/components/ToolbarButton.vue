@@ -6,6 +6,8 @@ const props = defineProps<{
   modalProps?: Record<string, unknown>
 }>()
 
+defineEmits<{ saved: [] }>()
+
 const showModal = ref(false)
 </script>
 
@@ -14,29 +16,10 @@ const showModal = ref(false)
     <slot />
   </button>
 
-  <component :is="modal" v-if="modal && showModal" v-bind="modalProps" @close="showModal = false" />
+  <component :is="modal" v-if="modal && showModal" v-bind="modalProps" @close="showModal = false" @saved="$emit('saved')" />
 </template>
 
 <style scoped>
-.toolbar-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 14px;
-  cursor: pointer;
-}
-.toolbar-btn:hover {
-  color: var(--ink);
-  border-color: var(--ink-faint);
-}
-
 @media (orientation: portrait) {
   .toolbar-btn :slotted(.label) {
     display: none;

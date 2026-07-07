@@ -19,21 +19,16 @@ CREATE TABLE `profiles` (
 	`avatar_color` text
 );
 --> statement-breakpoint
-CREATE TABLE `reading_values` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`reading_id` integer NOT NULL,
-	`metric_id` integer NOT NULL,
-	`value` real NOT NULL,
-	FOREIGN KEY (`reading_id`) REFERENCES `readings`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`metric_id`) REFERENCES `metrics`(`id`) ON UPDATE no action ON DELETE no action
-);
---> statement-breakpoint
 CREATE TABLE `readings` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`metric_id` integer NOT NULL,
 	`profile_id` integer NOT NULL,
-	`recorded_at` text NOT NULL,
-	`source` text,
-	`notes` text,
-	`session_id` text,
+	`value` real NOT NULL,
+	`note` text,
+	`reading_date` text NOT NULL,
+	`reading_time` text NOT NULL,
+	`created_at` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+	`updated_at` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+	FOREIGN KEY (`metric_id`) REFERENCES `metrics`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`profile_id`) REFERENCES `profiles`(`id`) ON UPDATE no action ON DELETE no action
 );

@@ -1,23 +1,39 @@
 <script setup lang="ts">
 const props = defineProps<{
+  profileId: number
   name: string
   sex: string | null
   birthDate: string | null
   avatarColor?: string | null
 }>()
 
-defineEmits<{ close: [] }>()
+const emit = defineEmits<{ close: []; saved: [profile: { name: string; sex: string | null; birthDate: string | null; avatarColor: string | null }] }>()
 
 const nameInput = ref(props.name)
 const sexInput = ref(props.sex)
 const birthDateInput = ref(props.birthDate)
 const avatarColorInput = ref(props.avatarColor ?? '#000000')
+
+async function save() {
+  const profile = await $fetch('/api/profile', {
+    method: 'PATCH',
+    query: { profileId: props.profileId },
+    body: {
+      name: nameInput.value,
+      sex: sexInput.value,
+      birthDate: birthDateInput.value,
+      avatarColor: avatarColorInput.value,
+    },
+  })
+  emit('saved', profile)
+  emit('close')
+}
 </script>
 
 <template>
   <Modal @close="$emit('close')">
     <h2 class="modal-title">Perfil</h2>
-    <form class="profile-form" @submit.prevent>
+    <form class="profile-form" @submit.prevent="save">
       <label class="field">
         <span class="label">Nombre</span>
         <input v-model="nameInput" type="text" name="name" />
@@ -48,6 +64,8 @@ const avatarColorInput = ref(props.avatarColor ?? '#000000')
         <span class="label">Nacimiento</span>
         <input v-model="birthDateInput" type="date" name="birthDate" />
       </label>
+
+      <button type="submit" class="toolbar-btn save-btn">Guardar</button>
     </form>
   </Modal>
 </template>
@@ -124,5 +142,10 @@ input[type='color'] {
   font-size: 13px;
   color: var(--ink-soft);
   cursor: pointer;
+}
+
+.save-btn {
+  align-self: flex-start;
+  margin-top: 4px;
 }
 </style>
