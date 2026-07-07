@@ -7,11 +7,11 @@ const { data: latest } = await useFetch('/api/readings/latest')
 
 const menuOpen = ref(false)
 const menuItems = ['Configuración', 'Perfil', 'Cambiar usuario']
+const showProfileModal = ref(false)
 
-const user: { name: string; sex: 'M' | 'F'; birthDate: string } = {
-  name: 'Jane Doe',
-  sex: 'F',
-  birthDate: '1994-03-17'
+function onMenuItemClick(item: string) {
+  menuOpen.value = false
+  if (item === 'Perfil') showProfileModal.value = true
 }
 
 const metrics = computed(() => (latest.value ?? []).map(m => ({
@@ -35,12 +35,21 @@ const metrics = computed(() => (latest.value ?? []).map(m => ({
           <span></span>
         </button>
         <ul v-if="menuOpen" class="menu">
-          <li v-for="item in menuItems" :key="item">{{ item }}</li>
+          <li v-for="item in menuItems" :key="item" @click="onMenuItemClick(item)">{{ item }}</li>
         </ul>
       </div>
     </header>
+
+    <ProfileModal
+      v-if="showProfileModal && profile"
+      :name="profile.name"
+      :sex="profile.sex"
+      :birth-date="profile.birthDate"
+      :avatar-color="profile.avatarColor"
+      @close="showProfileModal = false"
+    />
     <div class="toolbar">
-      <UserInfo v-if="profile ":name="profile.name" :sex="profile.sex" :birth-date="profile.birthDate" />
+      <UserInfo v-if="profile" :name="profile.name" :sex="profile.sex" :birth-date="profile.birthDate" :avatar-color="profile.avatarColor" />
       <div class="actions">
         <ToolbarButton :modal="RegisterDataModal" :modal-props="{ metrics }">
           <Plus :size="14" />

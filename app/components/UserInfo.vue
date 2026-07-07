@@ -3,35 +3,34 @@ const props = defineProps<{
   name: string
   sex: string | null
   birthDate: string | null
+  avatarColor?: string | null
 }>()
 
 const sexLabels: Record<string, string> = { M: 'Masc.', F: 'Fem.' }
 const sexLabel = computed(() => props.sex ? (sexLabels[props.sex] ?? props.sex) : 'N/A')
 
-
-function calculateAge(birthDate: string | null) {
-  if (!birthDate) return null
-  const birth = new Date(birthDate)
-  const today = new Date()
-  let age = today.getFullYear() - birth.getFullYear()
-  const hasHadBirthdayThisYear =
-    today.getMonth() > birth.getMonth() ||
-    (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate())
-  if (!hasHadBirthdayThisYear) age--
-  return age
-}
-
 const age = computed(() => calculateAge(props.birthDate))
+
+const showModal = ref(false)
 </script>
 
 <template>
-  <div class="user-info">
+  <div class="user-info" role="button" tabindex="0" @click="showModal = true" @keydown.enter="showModal = true">
     <p class="name">{{ name }}</p>
     <ul class="meta">
-      <li><span class="label">Sexo</span> {{ sexLabel }}</li>
+      <li><span class="label">Sexo bio.</span> {{ sexLabel }}</li>
       <li><span class="label">Edad</span> {{ age }}</li>
     </ul>
   </div>
+
+  <UserInfoModal
+    v-if="showModal"
+    :name="name"
+    :sex="sex"
+    :birth-date="birthDate"
+    :avatar-color="avatarColor"
+    @close="showModal = false"
+  />
 </template>
 
 <style scoped>
@@ -42,6 +41,11 @@ const age = computed(() => calculateAge(props.birthDate))
   border-radius: 14px;
   padding: 18px 22px;
   margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.user-info:hover {
+  border-color: var(--ink-faint);
 }
 
 .name {

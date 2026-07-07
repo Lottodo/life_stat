@@ -1,10 +1,11 @@
 <script setup lang="ts">
+defineProps<{ background?: string | null }>()
 defineEmits<{ close: [] }>()
 </script>
 
 <template>
   <div class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal">
+    <div class="modal" :style="background ? { background: `color-mix(in srgb, ${background} 40%, var(--card))` } : undefined">
       <button type="button" class="modal-close" aria-label="Cerrar" @click="$emit('close')">×</button>
       <slot />
     </div>
